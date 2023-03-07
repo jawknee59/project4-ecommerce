@@ -2,7 +2,7 @@
 
 # Overview
 
-A banh mi restaurant API allows you to access and integrate with the database so you can register, browse through menu, leave a review, and add items to cart and favorites.
+Jaw-commerce is an e-commerce site that has electronics, jewerlery, men's clothing, women's clothing that users can browse through and shop for.
 
 # Technologies Used
 
@@ -10,6 +10,7 @@ A banh mi restaurant API allows you to access and integrate with the database so
 - Python
 - CSS
 - Materialize
+- https://fakestoreapi.com/docs (for testing data)
 
 # User Stories
 
