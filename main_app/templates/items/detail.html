@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{ item.title }}</h1>
+
+  <div class="card">
+    <div class="card-content">
+      <span class="card-title">{{ item.title }}</span>
+      <p>Description: {{ item.description }}</p>
+      <p>Category: {{ item.category }}</p>
+      <p>Price: ${{ item.price }}</p>
+    </div>
+  </div>
+
+
+{% endblock %}
