@@ -20,10 +20,10 @@ As a user, I want the ability to:
 - Sign in
 - Sign out
 - browse through the items 
-- Add items to cart
+- Add and remove items from cart
 - View cart
 - Check out
-- Send order
+- Purchase items in cart using https://stripe.com/docs/checkout
 
 # Wireframes
 - Sign Up Page
@@ -39,4 +39,7 @@ As a user, I want the ability to:
 # ERD
 ![ERD](https://user-images.githubusercontent.com/26725511/223454602-e9260c33-c5cc-4b37-8f4c-e179cae23e04.png)
 
-
+# Stretch goals
+- For users to see their order history
+- Have an inventory system to keep track of inventory and what has been purchased
+- Have users add their own items and be purchased from other users
