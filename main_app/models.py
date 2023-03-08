@@ -21,6 +21,7 @@ class Item(models.Model):
         choices = CATEGORIES,
         default = CATEGORIES[0][0]
     )
+    image_url = models.CharField(max_length=200)
 
     def __str__(self):
         return self.title
