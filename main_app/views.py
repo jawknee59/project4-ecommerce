@@ -20,6 +20,26 @@ from .models import Item, Cart, CartItem
 # ]
 
 # Create your views here.
+# signup route
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    # This is how to create a 'user' form object
+    # that includes the data from the browser
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      # This will add the user to the database
+      user = form.save()
+      # This is how we log a user in via code
+      login(request, user)
+      return redirect('index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  # A bad POST or a GET request, so render signup.html with an empty form
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
+
 # home route
 def home(request):
   # Include an .html file extension - unlike when rendering EJS templates
@@ -39,12 +59,10 @@ def items_detail(request, item_id):
   item = Item.objects.get(id=item_id)
   return render(request, 'items/detail.html', {'item': item})
 
-
 @login_required
 def view_cart(request):
   cart = Cart.objects.filter(user=request.user).first()
-  context = {'cart': cart}
-  return render(request, 'cart/cart.html', context)
+  return render(request, 'cart/cart.html', {'cart': cart})
 
 @login_required
 def add_to_cart(request, item_id):
@@ -68,24 +86,7 @@ def remove_from_cart(request, item_id):
     cart_item.save()
   return redirect('view_cart')
 
-def signup(request):
-  error_message = ''
-  if request.method == 'POST':
-    # This is how to create a 'user' form object
-    # that includes the data from the browser
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-      # This will add the user to the database
-      user = form.save()
-      # This is how we log a user in via code
-      login(request, user)
-      return redirect('index')
-    else:
-      error_message = 'Invalid sign up - try again'
-  # A bad POST or a GET request, so render signup.html with an empty form
-  form = UserCreationForm()
-  context = {'form': form, 'error_message': error_message}
-  return render(request, 'registration/signup.html', context)
+
 
 
   

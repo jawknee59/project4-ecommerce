@@ -19,4 +19,7 @@
     {% empty %}
         <h3>Your cart is empty</h3>
     {% endfor %}
+    <div class="total-price">
+        <h3>Total price: {{ cart.get_total_price }}</h3>
+    </div>
 {% endblock %}
