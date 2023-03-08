@@ -36,3 +36,6 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def total_price(self):
+        return self.quantity * self.price
+
