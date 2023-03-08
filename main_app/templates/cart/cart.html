@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Cart</h1>
+    <ul>
+    {% for item in cart.cartitem_set.all %}
+    <div class="card">
+        <div class="card-content">  
+        <span class="card-title">{{ item.item.title }}</span>
+        <p>{{ item.item.description }}</p>
+        <p>price: {{ item.price }}</p>
+        <p>qty: {{ item.quantity }}</p>
+        <div class="card-action">
+            <form method="POST" action="{% url 'remove_from_cart' item.id %}">
+                {% csrf_token %}
+                <input type="submit" value="Remove Item" class="btn red">
+            </form>
+        </div>
+        </div>
+    </div>
+    {% empty %}
+        <li>Your cart is empty</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
