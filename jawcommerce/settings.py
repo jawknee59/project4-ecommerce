@@ -11,9 +11,17 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env(
+    # set up debug casting and default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -21,6 +29,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-q2un4!lp+so_b^=v$hba^z8+si_nls%%v)qt(o(h^&lrprr^f!'
+
+# Stripe public key 
+STRIPE_PUBLIC_KEY_TEST = env('STRIPE_PUBLIC_KEY_TEST')
+STRIPE_SECRET_KEY_TEST = env('STRIPE_SECRET_KEY_TEST')
+STRIPE_WEBHOOK_SECRET_TEST = env('STRIPE_WEBHOOK_SECRET_TEST')
+PRODUCT_PRICE = os.getenv('PRODUCT_PRICE')
+REDIRECT_DOMAIN = 'http://127.0.0.1:8000'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -128,3 +143,4 @@ LOGIN_REDIRECT_URL = '/items/'
 
 # Add this variable to specify where logging out redirects to
 LOGOUT_REDIRECT_URL = '/items/'
+

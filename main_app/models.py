@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
 # A tuple of 2-tuples
 CATEGORIES = (
     ("E", "Electronics"),
@@ -54,7 +57,15 @@ class CartItem(models.Model):
     def total_price(self):
         return self.quantity * self.price
 
+class UserPayment(models.Model):
+	app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+	payment_bool = models.BooleanField(default=False)
+	stripe_checkout_id = models.CharField(max_length=500)
 
-      
+
+@receiver(post_save, sender=User)
+def create_user_payment(sender, instance, created, **kwargs):
+	if created:
+		UserPayment.objects.create(app_user=instance)
 
 

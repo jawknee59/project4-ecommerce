@@ -22,4 +22,7 @@
     <div class="total-price">
         <h3>Total price: ${{ cart.get_total_price }}</h3>
     </div>
+    <form action="{% url 'product_page' %}">
+        <input type="submit" value="Checkout" class="btn">
+    </form>
 {% endblock %}
