@@ -23,7 +23,7 @@
         <h3>Total Price: ${{ cart.get_total_price }}</h3>
         <h3>Total Items: {{ cart.get_total_items }}</h3>
     </div>
-    <form action="{% url 'checkout' %}">
+    <form action="{% url 'product_page' %}">
         <input type="submit" value="Checkout" class="btn">
     </form>
 {% endblock %}

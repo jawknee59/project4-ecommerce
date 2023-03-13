@@ -4,7 +4,9 @@ from django.utils import timezone
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-import math
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+
 
 # A tuple of 2-tuples
 CATEGORIES = (
@@ -74,5 +76,6 @@ class UserPayment(models.Model):
 def create_user_payment(sender, instance, created, **kwargs):
 	if created:
 		UserPayment.objects.create(app_user=instance)
+
 
 

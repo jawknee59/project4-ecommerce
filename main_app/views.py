@@ -58,13 +58,11 @@ def items_detail(request, item_id):
   item = Item.objects.get(id=item_id)
   return render(request, 'items/detail.html', {'item': item})
 
-# View cart route
 @login_required
 def view_cart(request):
   cart = Cart.objects.filter(user=request.user).first()
   return render(request, 'cart/cart.html', {'cart': cart})
 
-# add to cart route
 @login_required
 def add_to_cart(request, item_id):
   item = get_object_or_404(Item, id=item_id)
@@ -79,7 +77,7 @@ def add_to_cart(request, item_id):
 
 @login_required
 def remove_from_cart(request, item_id):
-  cart_item = get_object_or_404(CartItem, id=item_id, cart_user=request.user)
+  cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
   if cart_item.quantity == 1:
     cart_item.delete()
   else:
@@ -87,28 +85,26 @@ def remove_from_cart(request, item_id):
     cart_item.save()
   return redirect('view_cart')
 
-@login_required
-def checkout(request):
-  cart = Cart.objects.filter(user=request.user).first()
-  stripe.api_key = settings.STRIPE_SECRET_KEY
-  total_price = cart.get_total_price()
-  total_items = cart.get_total_items()
-  if request.method == 'POST':
-    checkout_session = stripe.checkout.Session.create(
-      payment_method_types = ['card'],
-      line_items=[
-        {
-          'price': total_price,
-          'quantity': total_items,
-        },
-      ],
-      mode='payment',
-      success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
-    )
-    return render(checkout_session.url, code=303)
-  return render(request, 'user_payment/checkout.html', {'cart': cart, 'total_price': total_price, 'total_items': total_items})
-  
+
+@login_required(login_url='login')
+def product_page(request):
+	stripe.api_key = settings.STRIPE_SECRET_KEY
+	if request.method == 'POST':
+		checkout_session = stripe.checkout.Session.create(
+			payment_method_types = ['card'],
+			line_items = [
+				{
+					'price': 'price_1MjpjdCRy1StQc5fU4bKiIea',
+					'quantity': 1,
+				},
+			],
+			mode = 'payment',
+			customer_creation = 'always',
+			success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+			cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
+		)
+		return redirect(checkout_session.url, code=303)
+	return render(request, 'user_payment/product_page.html')
 
 
 ## use Stripe dummy card: 4242 4242 4242 4242
@@ -117,10 +113,6 @@ def payment_successful(request):
 	checkout_session_id = request.GET.get('session_id', None)
 	session = stripe.checkout.Session.retrieve(checkout_session_id)
 	customer = stripe.Customer.retrieve(session.customer)
-	user_id = request.user.user_id
-	user_payment = UserPayment.objects.get(user=user_id)
-	user_payment.stripe_checkout_id = checkout_session_id
-	user_payment.save()
 	return render(request, 'user_payment/payment_successful.html', {'customer': customer})
 
 
@@ -152,7 +144,6 @@ def stripe_webhook(request):
 		user_payment.payment_bool = True
 		user_payment.save()
 	return HttpResponse(status=200)
-
 
 
 
