@@ -2,7 +2,7 @@
 {% block content %}
    <div class="container home_msg">
         {% if user.is_authenticated %}
-        <form enctype="multipart/form-data" method="post" role="product_page">
+        <form enctype="multipart/form-data" method="POST" role="product_page">
         {% csrf_token %}
             <h2>Hi {{ user }}! To pay, click on this button <button type="submit" class="btn btn-success" href="{% url 'product_page' %}" data-bind-href="pricing">Payment</button></h2>
         </form>
@@ -11,4 +11,5 @@
 
         {% endif %}
     </div>
-    {% endblock %}
+{% endblock %} 
+

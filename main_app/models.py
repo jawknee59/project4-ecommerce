@@ -19,6 +19,7 @@ CATEGORIES = (
 # Create your models here.
 # Item Model
 class Item(models.Model):
+    stripe_price_id = models.CharField(max_length=50)
     title = models.TextField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(max_length=1000)
@@ -60,7 +61,7 @@ class CartItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.cart.user, self.item, self. quantity
+        return self.cart.user, self.item, self.quantity
 
     # function to get qty * price of one item 
     def total_price(self):

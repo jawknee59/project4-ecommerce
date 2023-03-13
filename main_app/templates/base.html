@@ -18,7 +18,6 @@
                     <li><a href="/" class="left brand-logo">&nbsp;&nbsp;Jawcommerce</a></li>
                 </ul>
                 <ul class="right">
-                    <li><a href="{% url 'about' %}">About</a></li>
                     <li><a href="{% url 'index' %}">View All Items</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'view_cart' %}">Cart</a></li>

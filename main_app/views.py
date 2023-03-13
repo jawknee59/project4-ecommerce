@@ -44,10 +44,6 @@ def home(request):
   # Include an .html file extension - unlike when rendering EJS templates
   return render(request, 'home.html')
 
-# about route
-def about(request):
-  return render(request, 'about.html')
-
 # items index route
 def items_index(request):
   items = Item.objects.all()
@@ -84,7 +80,6 @@ def remove_from_cart(request, item_id):
     cart_item.quantity -= 1
     cart_item.save()
   return redirect('view_cart')
-
 
 @login_required(login_url='login')
 def product_page(request):
