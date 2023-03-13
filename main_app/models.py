@@ -3,10 +3,11 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-
+import stripe
+from django.conf import settings
 
 # A tuple of 2-tuples
 CATEGORIES = (
@@ -19,10 +20,10 @@ CATEGORIES = (
 # Create your models here.
 # Item Model
 class Item(models.Model):
-    stripe_price_id = models.CharField(max_length=50)
     title = models.TextField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(max_length=1000)
+    stripe_price_id = models.CharField(max_length=50)
     category = models.CharField(
         max_length=2,
         choices = CATEGORIES,
@@ -71,7 +72,6 @@ class UserPayment(models.Model):
 	app_user = models.ForeignKey(User, on_delete=models.CASCADE)
 	payment_bool = models.BooleanField(default=False)
 	stripe_checkout_id = models.CharField(max_length=500)
-
 
 @receiver(post_save, sender=User)
 def create_user_payment(sender, instance, created, **kwargs):

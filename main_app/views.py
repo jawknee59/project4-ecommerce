@@ -83,23 +83,46 @@ def remove_from_cart(request, item_id):
 
 @login_required(login_url='login')
 def product_page(request):
-	stripe.api_key = settings.STRIPE_SECRET_KEY
-	if request.method == 'POST':
-		checkout_session = stripe.checkout.Session.create(
-			payment_method_types = ['card'],
-			line_items = [
-				{
-					'price': 'price_1MjpjdCRy1StQc5fU4bKiIea',
-					'quantity': 1,
-				},
-			],
-			mode = 'payment',
-			customer_creation = 'always',
-			success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-			cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
-		)
-		return redirect(checkout_session.url, code=303)
-	return render(request, 'user_payment/product_page.html')
+  stripe.api_key = settings.STRIPE_SECRET_KEY
+  cart = Cart.objects.filter(user=request.user).first()
+  if request.method == 'POST':
+      line_items = []
+      for cart_item in cart.cartitem_set.all():
+          line_items.append({
+              'price': cart_item.item.stripe_price_id,
+              'quantity': cart_item.quantity,
+          })
+      checkout_session = stripe.checkout.Session.create(
+          payment_method_types = ['card'],
+          line_items = line_items,
+          mode = 'payment',
+          customer_creation = 'always',
+          success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+          cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
+      )
+      return redirect(checkout_session.url, code=303)
+  return render(request, 'user_payment/product_page.html')
+
+
+# @login_required(login_url='login')
+# def product_page(request):
+# 	stripe.api_key = settings.STRIPE_SECRET_KEY
+# 	if request.method == 'POST':
+# 		checkout_session = stripe.checkout.Session.create(
+# 			payment_method_types = ['card'],
+# 			line_items = [
+# 				{
+# 					'price': 'price_1MjpjdCRy1StQc5fU4bKiIea',
+# 					'quantity': 1,
+# 				},
+# 			]
+# 			mode = 'payment',
+# 			customer_creation = 'always',
+# 			success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+# 			cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
+# 		)
+# 		return redirect(checkout_session.url, code=303)
+	# return render(request, 'user_payment/product_page.html')
 
 
 ## use Stripe dummy card: 4242 4242 4242 4242
