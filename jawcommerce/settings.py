@@ -31,10 +31,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'django-insecure-q2un4!lp+so_b^=v$hba^z8+si_nls%%v)qt(o(h^&lrprr^f!'
 
 # Stripe public key 
-STRIPE_PUBLIC_KEY_TEST = env('STRIPE_PUBLIC_KEY_TEST')
-STRIPE_SECRET_KEY_TEST = env('STRIPE_SECRET_KEY_TEST')
-STRIPE_WEBHOOK_SECRET_TEST = env('STRIPE_WEBHOOK_SECRET_TEST')
-PRODUCT_PRICE = os.getenv('PRODUCT_PRICE')
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET')
 REDIRECT_DOMAIN = 'http://127.0.0.1:8000'
 
 # SECURITY WARNING: don't run with debug turned on in production!

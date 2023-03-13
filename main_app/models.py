@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+import math
 
 # A tuple of 2-tuples
 CATEGORIES = (
@@ -42,6 +43,12 @@ class Cart(models.Model):
         for item in self.cartitem_set.all():
             total_price += item.total_price()
         return total_price
+
+    def get_total_items(self):
+        total_qty = 0
+        for item in self.cartitem_set.all():
+            total_qty += item.quantity
+        return total_qty
 
 # Item(s) in cart Model
 class CartItem(models.Model):
