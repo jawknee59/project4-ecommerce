@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jawcommerce</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 </head>
@@ -18,13 +19,13 @@
                     <li><a href="/" class="left brand-logo">&nbsp;&nbsp;Jawcommerce</a></li>
                 </ul>
                 <ul class="right">
-                    <li><a href="{% url 'about' %}">About</a></li>
                     <li><a href="{% url 'index' %}">View All Items</a></li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'view_cart' %}">Cart</a></li>
+                        <li>Hello, {{ user }}</li>
                         <li><a href="{% url 'logout' %}">Log Out</a></li>
+                        <li><a href="{% url 'view_cart' %}"><i class="material-icons">shopping_cart</i></a></li>
                     {% else %}
-                    <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                        <li><a href="{% url 'signup' %}">Sign Up</a></li>
                         <li><a href="{% url 'login' %}">Log In</a></li>
                     {% endif %}
                 </ul>

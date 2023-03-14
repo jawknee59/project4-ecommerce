@@ -2,22 +2,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import Item, Cart, CartItem
+from .models import Item, Cart, CartItem, UserPayment
 
-# items = [
-#   {
-#     "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops", 
-#     "price": 109.95, 
-#     "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-#     "category": "men's clothing"
-#   }, 
-#   {
-#     "title": "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet", 
-#     "price": 695, 
-#     "description": "From our Legends Collection, the Naga was inspired by the mythical water dragon that protects the ocean's pearl. Wear facing inward to be bestowed with love and abundance, or outward for protection.",
-#     "category": "jewelery"
-#   },
-# ]
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+import stripe
+import time
+
+import stripe
+# This is your test secret API key.
+stripe.api_key = 'sk_test_51MjRkACRy1StQc5fhE4HobblMhHv5xmyfWQw3hYmXtPsORtFu3FfQQghwLOe07QVbFC9aMRS5BopDgc6cd9xxQZN00KKPAGmX6'
+
+YOUR_DOMAIN = 'http://127.0.0.1:8000'
+
+
 
 # Create your views here.
 # signup route
@@ -44,10 +43,6 @@ def signup(request):
 def home(request):
   # Include an .html file extension - unlike when rendering EJS templates
   return render(request, 'home.html')
-
-# about route
-def about(request):
-  return render(request, 'about.html')
 
 # items index route
 def items_index(request):
@@ -85,6 +80,88 @@ def remove_from_cart(request, item_id):
     cart_item.quantity -= 1
     cart_item.save()
   return redirect('view_cart')
+
+@login_required(login_url='login')
+def product_page(request):
+  stripe.api_key = settings.STRIPE_SECRET_KEY
+  cart = Cart.objects.filter(user=request.user).first()
+  if request.method == 'POST':
+      line_items = []
+      for cart_item in cart.cartitem_set.all():
+          line_items.append({
+              'price': cart_item.item.stripe_price_id,
+              'quantity': cart_item.quantity,
+          })
+      checkout_session = stripe.checkout.Session.create(
+          payment_method_types = ['card'],
+          line_items = line_items,
+          mode = 'payment',
+          customer_creation = 'always',
+          success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+          cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
+      )
+      return redirect(checkout_session.url, code=303)
+  return render(request, 'user_payment/product_page.html')
+
+
+# @login_required(login_url='login')
+# def product_page(request):
+# 	stripe.api_key = settings.STRIPE_SECRET_KEY
+# 	if request.method == 'POST':
+# 		checkout_session = stripe.checkout.Session.create(
+# 			payment_method_types = ['card'],
+# 			line_items = [
+# 				{
+# 					'price': 'price_1MjpjdCRy1StQc5fU4bKiIea',
+# 					'quantity': 1,
+# 				},
+# 			]
+# 			mode = 'payment',
+# 			customer_creation = 'always',
+# 			success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+# 			cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
+# 		)
+# 		return redirect(checkout_session.url, code=303)
+	# return render(request, 'user_payment/product_page.html')
+
+
+## use Stripe dummy card: 4242 4242 4242 4242
+def payment_successful(request):
+	stripe.api_key = settings.STRIPE_SECRET_KEY
+	checkout_session_id = request.GET.get('session_id', None)
+	session = stripe.checkout.Session.retrieve(checkout_session_id)
+	customer = stripe.Customer.retrieve(session.customer)
+	return render(request, 'user_payment/payment_successful.html', {'customer': customer})
+
+
+def payment_cancelled(request):
+	stripe.api_key = settings.STRIPE_SECRET_KEY
+	return render(request, 'user_payment/payment_cancelled.html')
+
+
+@csrf_exempt
+def stripe_webhook(request):
+	stripe.api_key = settings.STRIPE_SECRET_KEY
+	time.sleep(10)
+	payload = request.body
+	signature_header = request.META['HTTP_STRIPE_SIGNATURE']
+	event = None
+	try:
+		event = stripe.Webhook.construct_event(
+			payload, signature_header, settings.STRIPE_WEBHOOK_SECRET
+		)
+	except ValueError as e:
+		return HttpResponse(status=400)
+	except stripe.error.SignatureVerificationError as e:
+		return HttpResponse(status=400)
+	if event['type'] == 'checkout.session.completed':
+		session = event['data']['object']
+		session_id = session.get('id', None)
+		time.sleep(15)
+		user_payment = UserPayment.objects.get(stripe_checkout_id=session_id)
+		user_payment.payment_bool = True
+		user_payment.save()
+	return HttpResponse(status=200)
 
 
 
