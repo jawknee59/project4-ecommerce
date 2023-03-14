@@ -103,28 +103,6 @@ def product_page(request):
       return redirect(checkout_session.url, code=303)
   return render(request, 'user_payment/product_page.html')
 
-
-# @login_required(login_url='login')
-# def product_page(request):
-# 	stripe.api_key = settings.STRIPE_SECRET_KEY
-# 	if request.method == 'POST':
-# 		checkout_session = stripe.checkout.Session.create(
-# 			payment_method_types = ['card'],
-# 			line_items = [
-# 				{
-# 					'price': 'price_1MjpjdCRy1StQc5fU4bKiIea',
-# 					'quantity': 1,
-# 				},
-# 			]
-# 			mode = 'payment',
-# 			customer_creation = 'always',
-# 			success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-# 			cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
-# 		)
-# 		return redirect(checkout_session.url, code=303)
-	# return render(request, 'user_payment/product_page.html')
-
-
 ## use Stripe dummy card: 4242 4242 4242 4242
 def payment_successful(request):
 	stripe.api_key = settings.STRIPE_SECRET_KEY
