@@ -104,10 +104,9 @@ WSGI_APPLICATION = 'jawcommerce.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.config(     
-    default='postgresql://postgres:postgres@localhost:5432/jaw-commerce',        
-    conn_max_age=600    )
-    }
+    'default': dj_database_url.config(
+    default='postgresql://postgres:postgres@localhost:5432/jaw-commerce', conn_max_age=600
+)}
 
 
 
