@@ -73,7 +73,7 @@ def add_to_cart(request, item_id):
 
 @login_required
 def remove_from_cart(request, item_id):
-  cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+  cart_item = get_object_or_404(CartItem, id=item_id, cart_user=request.user)
   if cart_item.quantity == 1:
     cart_item.delete()
   else:
@@ -100,16 +100,20 @@ def product_page(request):
           success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
           cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
       )
+
       return redirect(checkout_session.url, code=303)
   return render(request, 'user_payment/product_page.html')
 
 ## use Stripe dummy card: 4242 4242 4242 4242
 def payment_successful(request):
-	stripe.api_key = settings.STRIPE_SECRET_KEY
-	checkout_session_id = request.GET.get('session_id', None)
-	session = stripe.checkout.Session.retrieve(checkout_session_id)
-	customer = stripe.Customer.retrieve(session.customer)
-	return render(request, 'user_payment/payment_successful.html', {'customer': customer})
+  # remove all cart items for the current user
+  cart = Cart.objects.filter(user=request.user).first()
+  CartItem.objects.filter(cart=cart).delete()
+  stripe.api_key = settings.STRIPE_SECRET_KEY
+  checkout_session_id = request.GET.get('session_id', None)
+  session = stripe.checkout.Session.retrieve(checkout_session_id)
+  customer = stripe.Customer.retrieve(session.customer)
+  return render(request, 'user_payment/payment_successful.html', {'customer': customer})
 
 
 def payment_cancelled(request):
