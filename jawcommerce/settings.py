@@ -31,7 +31,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-q2un4!lp+so_b^=v$hba^z8+si_nls%%v)qt(o(h^&lrprr^f!'
 SECRET_KEY = env('SECRET_KEY')
-
 # Stripe public key 
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
@@ -42,10 +41,12 @@ REDIRECT_DOMAIN = 'http://127.0.0.1:8000'
 # DEBUG = True
 DEBUG = 'RENDER' not in os.environ
 
+
 ALLOWED_HOSTS = []
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+if RENDER_EXTERNAL_HOSTNAME:    
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -95,18 +96,18 @@ WSGI_APPLICATION = 'jawcommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'jaw-commerce',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(     
-    default='postgresql://postgres:postgres@localhost:5432/jaw-commerce',        
-    conn_max_age=600    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jaw-commerce',
     }
+}
+
+# DATABASES = {
+#     'default': dj_database_url.config(     
+#     default='postgresql://postgres:postgres@localhost:5432/jaw-commerce',        
+#     conn_max_age=600    )
+#     }
 
 
 
