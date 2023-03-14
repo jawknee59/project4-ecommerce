@@ -95,12 +95,12 @@ WSGI_APPLICATION = 'jawcommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'jaw-commerce',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jaw-commerce',
+    }
+}
 
 DATABASES = {
     'default': dj_database_url.config(     
