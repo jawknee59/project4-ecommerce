@@ -24,8 +24,13 @@
     <div class="total-price">
         <h3>Total Price: ${{ cart.get_total_price }}</h3>
         <h3>Total Items: {{ cart.get_total_items }}</h3>
-    </div>
-    <form action="{% url 'product_page' %}">
-        <input type="submit" value="Checkout" class="btn">
-    </form>
+        {% if user.is_authenticated %}
+            <form enctype="multipart/form-data" action="{% url 'product_page' %}" method="POST" role="product_page">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success" href="{% url 'product_page' %}" data-bind-href="pricing">Checkout</button>
+            </form>
+        {% else %}
+            <h2>You're not logged in...</h2><a href="{% url 'login' %}" class="btn btn-secondary">Log in</a>
+        {% endif %}
+</div>
 {% endblock %}
