@@ -11,7 +11,9 @@
             <div class="card-action">
                 <form method="POST" action="{% url 'remove_from_cart' item.id %}">
                     {% csrf_token %}
-                    <input type="submit" value="Remove Item" class="btn red right">
+                    <button class="btn right red" type="submit">
+                        <i class="material-icons">remove_shopping_cart</i>
+                    </button>
                 </form>
             </div>
         </div>
