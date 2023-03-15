@@ -14,7 +14,8 @@
                             </a>
                         </div>
                         <div class="col s5">
-                            <p>{{ item.item.title }}</p>          
+                            <p>{{ item.item.title }}</p>
+                            <p>{{ item.item.description }}</p>          
                         </div>
                         <div class="col s2">
                             <p>{{ item.quantity }}</p>
@@ -27,7 +28,7 @@
                 <div class="card-action">
                     <form method="POST" action="{% url 'remove_from_cart' item.id %}">
                         {% csrf_token %}
-                        <button class="btn-small red" type="submit">
+                        <button class="btn-small red" type="submit" onclick="M.toast({html: '{{ item.item.title }} was removed from your cart!'})">
                             <i class="material-icons">remove_shopping_cart</i>
                         </button>
                     </form>  
