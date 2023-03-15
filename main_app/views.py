@@ -10,7 +10,6 @@ from django.http import HttpResponse
 import stripe
 import time
 
-import stripe
 # This is your test secret API key.
 stripe.api_key = 'sk_test_51MjRkACRy1StQc5fhE4HobblMhHv5xmyfWQw3hYmXtPsORtFu3FfQQghwLOe07QVbFC9aMRS5BopDgc6cd9xxQZN00KKPAGmX6'
 
