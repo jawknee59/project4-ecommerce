@@ -40,8 +40,9 @@ def signup(request):
 
 # home route
 def home(request):
+  items = Item.objects.all()
   # Include an .html file extension - unlike when rendering EJS templates
-  return render(request, 'home.html')
+  return render(request, 'home.html', {'items': items})
 
 # items index route
 def items_index(request):

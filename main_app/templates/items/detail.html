@@ -8,7 +8,7 @@
     <div class="col s7">
     <p style="overflow-wrap: break-word;">{{ item.description }}</p>
     <p>Category: {{ item.category }}</p>
-    <p>Price: ${{ item.price }}</p>
+    <p>${{ item.price }}</p>
 
       <form action="{% url 'add_to_cart' item.id %}" method="POST">
         {% csrf_token %}

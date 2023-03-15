@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Home Page</h1>
+    <div class="carousel">
+        {% for item in items %}
+            
+                <a class="carousel-item" href="{% url 'detail' item.id %}" style="text-decoration:none;">
+                    <img src="{{ item.image_url}}">
+                </a>
+           
+        {% endfor %}
+    </div>
 {% endblock %}

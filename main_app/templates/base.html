@@ -14,12 +14,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="{% static 'app.js' %}"></script>
 
-
 </head>
 <body>
     <header class="navbar-fixed">
         <nav>
-            <div class="nav-wrapper blue darken-1">
+            <div class="nav-wrapper brown lighten-3">
                 <ul>
                     <li><a href="/" class="left brand-logo">&nbsp;&nbsp;Jawcommerce</a></li>
                 </ul>
@@ -41,9 +40,12 @@
         {% block content %}
         {% endblock %}
     </main>
-    <footer class="page-footer blue darken-1">
+    <footer class="page-footer brown lighten-3">
         <div class="right">All Rights Reserved, &copy; 2023 Jawcommerce &nbsp;</div>
     </footer>
-    
+<script>
+    const small = document.querySelector('.carousel');
+    M.Carousel.init(small, {});
+</script>    
 </body>
 </html>
