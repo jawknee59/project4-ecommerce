@@ -73,7 +73,7 @@ def add_to_cart(request, item_id):
 
 @login_required
 def remove_from_cart(request, item_id):
-  cart_item = get_object_or_404(CartItem, id=item_id, cart_user=request.user)
+  cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
   if cart_item.quantity == 1:
     cart_item.delete()
   else:
@@ -81,6 +81,7 @@ def remove_from_cart(request, item_id):
     cart_item.save()
   return redirect('view_cart')
 
+  
 @login_required(login_url='login')
 def product_page(request):
   stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -100,7 +101,6 @@ def product_page(request):
           success_url = settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
           cancel_url = settings.REDIRECT_DOMAIN + '/payment_cancelled',
       )
-
       return redirect(checkout_session.url, code=303)
   return render(request, 'user_payment/product_page.html')
 
