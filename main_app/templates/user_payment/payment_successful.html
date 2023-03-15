@@ -2,5 +2,6 @@
 {% block content %}
     <div class="container home_msg">
         <h1>Thanks for your order {{ customer.name }}!</h1>
+        <a href="{% url 'index' %}" class="btn">Continue shoppping</a>
     </div>
 {% endblock %}
